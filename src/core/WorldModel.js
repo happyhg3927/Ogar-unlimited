@@ -26,17 +26,17 @@ module.exports = class WorldModel {
     this.borderLeft = borderLeft;
     this.borderBottom = borderBottom;
     this.borderTop = borderTop;
-   
-    this.lastNodeId = 2;    // todo why 2?
+
+    this.lastNodeId = 2; // todo why 2?
     this.nodes = new SortedMap();
-    
+
     this.quadMap = {
       1: [],
       2: [],
       3: [],
       4: [],
     };
-   
+
     this.movingNodes = new SortedMap();
     this.playerNodes = SortedMap();
     this.virusNodes = SortedMap();
@@ -54,13 +54,13 @@ module.exports = class WorldModel {
         this.setNodeAsMoving(id, node);
         break;
       case "virus":
-        this.setNodeAsVirus(id,node);
+        this.setNodeAsVirus(id, node);
         break;
       case "ejected":
-        this.setNodeAsEjected(id,node);
+        this.setNodeAsEjected(id, node);
         break;
       case "rainbow":
-        this.setNodeAsRainbow(id,node);
+        this.setNodeAsRainbow(id, node);
         break;
     }
   }
@@ -105,19 +105,16 @@ module.exports = class WorldModel {
 
   getNearestNodeToNode(node, type, radius) {
     let nodes = this.getNodes(type);
-
     // More like getNearbyVirus
     let foundNode = undefined;
     let r = (radius) ? radius : 100; // Checking radius
-
     let topY = node.position.y - r;
     let bottomY = node.position.y + r;
-
     let leftX = node.position.x - r;
     let rightX = node.position.x + r;
 
     // Loop through all nodes on the map. There is probably a more efficient way of doing this
-    nodes.some((check)=> {
+    nodes.some((check) => {
       //if (typeof check === 'undefined') return false;
       if (!check || !check.collisionCheck(bottomY, topY, rightX, leftX)) return false;
 
@@ -126,10 +123,9 @@ module.exports = class WorldModel {
       return true; // stop checking when a virus found
     });
     return foundNode;
-
   }
-clearAll() {
-   this.nodes.clear();
+  clearAll() {
+    this.nodes.clear();
     this.movingNodes.clear();
     this.playerNodes.clear();
     this.ejectedNodes.clear();
@@ -137,7 +133,7 @@ clearAll() {
     this.virusNodes.clear();
     this.clearQuadMap()
     this.lastNodeId = 2;
-}
+  }
   removeNode(id) {
     this.nodes.delete(id);
     this.movingNodes.delete(id);
@@ -162,70 +158,63 @@ clearAll() {
   getNextNodeId() {
     return this.getNewNodeId();
   }
-setAsNode(id, node) {
-  this.nodes.set(id, node)
-}
- clearEjected() {
-   this.ejectedNodes.clear();
- }
- clearMoving() {
-   this.movingNodes.clear();
- }
- clearVirus() {
-   this.virusNodes.clear();
-   
- }
-getQuadMap(quad) {
-  return this.quadMap[quad];
-}
- clearQuadMap() {
-   this.quadMap = {
+  setAsNode(id, node) {
+    this.nodes.set(id, node)
+  }
+  clearEjected() {
+    this.ejectedNodes.clear();
+  }
+  clearMoving() {
+    this.movingNodes.clear();
+  }
+  clearVirus() {
+    this.virusNodes.clear();
+
+  }
+  getQuadMap(quad) {
+    return this.quadMap[quad];
+  }
+  clearQuadMap() {
+    this.quadMap = {
       1: [],
       2: [],
       3: [],
       4: [],
     };
- }
- setQuadMap(quad, id) {
-   this.quadMap[quad][id] = id;
- }
- removeQuadMap(quad, ind) {
-   try {
-     if (quad) {
-          
-   this.quadMap[quad].splice(ind,1);
-     } else {
-       
-       this.quadMap[1].splice(ind,1);
-      
-       this.quadMap[2].splice(ind,1);
-     
-       this.quadMap[3].splice(ind,1);
-     
-       this.quadMap[4].splice(ind,1);
-     }
-   } catch (e) {
-     console.log("[Quadmap] " + e);
-   }
- }
- 
- clearPlayer() {
-   this.playerNodes.clear();
- }
+  }
+  setQuadMap(quad, id) {
+    this.quadMap[quad][id] = id;
+  }
+  removeQuadMap(quad, ind) {
+    try {
+      if (quad) {
+        this.quadMap[quad].splice(ind, 1);
+      } else {
+        this.quadMap[1].splice(ind, 1);
+        this.quadMap[2].splice(ind, 1);
+        this.quadMap[3].splice(ind, 1);
+        this.quadMap[4].splice(ind, 1);
+      }
+    } catch (e) {
+      console.log("[Quadmap] " + e);
+    }
+  }
+
+  clearPlayer() {
+    this.playerNodes.clear();
+  }
   setNodeAsMoving(id, node) {
     this.movingNodes.set(id, node);
   }
   setNodeAsEjected(id, node) {
-    this.ejectedNodes.set(id,node);
-    
+    this.ejectedNodes.set(id, node);
   }
-  setNodeAsRainbow(id,node) {
-    this.rainbowNodes.set(id,node);
+  setNodeAsRainbow(id, node) {
+    this.rainbowNodes.set(id, node);
   }
   setNodeAsVirus(id, node) {
     this.virusNodes.set(id, node);
   }
-
   removeEjectedNode(id) {
     this.ejectedNodes.delete(id);
   }
@@ -235,21 +224,16 @@ getQuadMap(quad) {
   removeVirusNode(id) {
     this.virusNodes.delete(id);
   }
-
   getMovingNodes() {
     return this.movingNodes;
   }
-
   getPlayerNodes() {
     return this.playerNodes;
   }
-
   getRandomPosition() {
     return {
       x: Math.floor(Math.random() * (this.borderRight - this.borderLeft)) + this.borderLeft,
       y: Math.floor(Math.random() * (this.borderBottom - this.borderTop)) + this.borderTop
     }
   }
-
-
 };
